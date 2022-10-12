@@ -16,7 +16,6 @@ Pone <- function(n, k, strategy, nreps) {
         nSuccess <- nSuccess + 1
       }
     }
-    return(nSuccess/nreps)
   }
   return(nSuccess/nreps)
   
