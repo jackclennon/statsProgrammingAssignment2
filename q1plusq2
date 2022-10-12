@@ -1,0 +1,41 @@
+n <- 50
+
+pone <- function(n, k, strategy, nreps=10000) {
+  N <- 2*n
+  I <- 1:N
+  ns <- 0
+  for (r in 1:nreps) {
+    b <- sample(I)
+    #print(c(k, b[1:10]))
+    i <- k
+    a <- 1
+    while(k != b[i] && a < n) {
+      i = b[i]
+      a <- a+1
+    }
+    if (k == b[i]) {
+      ns <- ns + 1
+    }
+  }
+  #print(ns/nreps)
+  ns/nreps
+}
+
+pall <- function(n, strategy, nreps) {
+  s <- 0
+  nSuccesses <- 0
+  for (r in 1:nreps) {
+    seed <- sample(1:100000, 1)
+    s <- 0
+    for(p in 1:(2*n)) {
+      set.seed(seed)
+      s <- s + pone(n, p, strategy, 1)
+    }
+    if (s == 2*n) {
+      nSuccesses <- nSuccesses + 1
+    }
+  }
+  nSuccesses/nreps
+}
+
+pall(n, 1, 1000)
