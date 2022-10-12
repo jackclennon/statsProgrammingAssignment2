@@ -1,41 +1,45 @@
-n <- 50
-
-pone <- function(n, k, strategy, nreps=10000) {
+Pone <- function(n, k, strategy, nreps) {
   N <- 2*n
-  I <- 1:N
-  ns <- 0
-  for (r in 1:nreps) {
-    b <- sample(I)
-    #print(c(k, b[1:10]))
-    i <- k
-    a <- 1
-    while(k != b[i] && a < n) {
-      i = b[i]
-      a <- a+1
+  prisonernumber<-k
+  prisoners <- 1:N
+  nSuccess <- 0
+  boxes <- sample(prisoners)
+  box_to_open <- prisonernumber
+  numberofattempts <- 1
+  if (strategy==1) {
+    for (r in 1:nreps) {
+      while(prisonernumber != boxes[box_to_open] && numberofattempts < n) {
+        box_to_open = boxes[box_to_open]
+        numberofattempts <- numberofattempts+1
+      }
+      if (prisonernumber == boxes[box_to_open]) {
+        nSuccess <- nSuccess + 1
+      }
     }
-    if (k == b[i]) {
-      ns <- ns + 1
-    }
+    return(nSuccess/nreps)
   }
-  #print(ns/nreps)
-  ns/nreps
+  return(nSuccess/nreps)
+  
 }
 
-pall <- function(n, strategy, nreps) {
-  s <- 0
+Pone(50,32,2,1000)
+
+
+Pall <- function(n, strategy, nreps) {
+  nFoundCards <- 0
   nSuccesses <- 0
   for (r in 1:nreps) {
     seed <- sample(1:100000, 1)
-    s <- 0
-    for(p in 1:(2*n)) {
+    nFoundCards <- 0
+    for(prisoner in 1:(2*n)) {
       set.seed(seed)
-      s <- s + pone(n, p, strategy, 1)
+      nFoundCards <- nFoundCards + Pone(n, prisoner, strategy, 1)
     }
-    if (s == 2*n) {
+    if (nFoundCards == 2*n) {
       nSuccesses <- nSuccesses + 1
     }
   }
   nSuccesses/nreps
 }
 
-pall(n, 1, 1000)
+Pall(50, 1, nreps=1000)
