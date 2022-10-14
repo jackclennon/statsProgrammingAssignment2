@@ -1,3 +1,5 @@
+start.time <- Sys.time()
+
 p <- function(n, k, strategy, shuffledboxes) {
   if (strategy < 3) {
     if (strategy==1) {
@@ -24,7 +26,6 @@ p <- function(n, k, strategy, shuffledboxes) {
   }
   0
 }
-
 pone <- function(n, k, strategy, nreps=10000) {
   N <- 2*n
   prisoners <- 1:N
@@ -35,20 +36,14 @@ pone <- function(n, k, strategy, nreps=10000) {
   }
   nSuccesses/nreps
 }
-
 pall <- function(n, strategy, nreps=10000) {
   N <- 2*n
-  prisoners <- 1:N
+  prisoners <- c(1:N)
   nSuccesses <- 0
   for (rep in 1:nreps) {
-    shuffledboxes <- sample(prisoners)
-    consecutive_prisoners <- 0
-    for (k in prisoners) {
-      consecutive_prisoners <- consecutive_prisoners + p(n, k, strategy, shuffledboxes)
-    }
-    if (consecutive_prisoners == N) {
-      nSuccesses <- nSuccesses + 1
-    }
+    shuffle<-sample(1:N)
+    tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))
+    if (sum(unlist(tally))==N){nSuccesses<-nSuccesses+1}
   }
   nSuccesses/nreps
 }
@@ -64,22 +59,22 @@ print(PoneExample)
 print(PallExample)
 
 
-pall <- function(n, strategy, nreps=10000) {
-  N <- 2*n
-  prisoners <- 1:N
-  nSuccesses <- 0
-  for (rep in 1:nreps) {
-    shuffledboxes <- sample(prisoners)
-    loop <- c()
-    for (i in prisoners) {
-      loop <- append(loop, shuffledboxes[i])
-      i = loop[length(loop)]
-      if (shuffledboxes[i] %in% loop){
-        
-      }
-    }
-  }
-}
+end.time <- Sys.time()
+time.taken <- round(end.time - start.time,2)
+time.taken
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
