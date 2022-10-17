@@ -86,7 +86,43 @@ dloop<-function(n,nreps=1000){
   index/nreps
 }
 
-plot(1:100,dloop(50),type="o")
+checkLoop <- function(n, boxes,card) {
+  terminate <- card
+  loop <- 0
+  while (card != terminate || loop == 0) {
+    card <- boxes[card]
+    loop <- loop + 1
+  }
+  if (loop == n) {
+    return(1)
+  }
+  return(0)
+}
+
+dloop <- function(n,nreps) {
+  emptyfornow<-c()
+  k=sample(1:(2*n),1)
+  for (i in 1:nreps){
+    shuffledboxes=sample(1:(2*n))
+    box_to_open <- shuffledboxes[k]
+    path<-c(k)
+    while (box_to_open != k) {
+      box_to_open <- shuffledboxes[box_to_open]
+      path<-append(path,box_to_open)
+    }
+    emptyfornow<-append(emptyfornow,length(path))
+  }
+  Y=sort(emptyfornow,decreasing = FALSE)
+  X=c()
+  for (j in 1:(2*n)){
+    X<-append(X,length(which(Y==j)))
+  }
+  X/nreps
+}
+
+
+plot(1:100,dloop(50,10000),ylim=c(0,0.1),type='s')
+
 
 
 end.time <- Sys.time()
