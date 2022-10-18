@@ -1,0 +1,29 @@
+dloop <- function(n, nreps=10000) {
+  N <- 2*n
+  n <- rep(0, N)
+  for (r in 1:nreps) {
+    boxes <- sample(1:N)
+    pool <- c(1:N)
+    foundOnce <- rep(0, N)
+    for (l in pool) {
+      loopLength <- 0
+      card <- boxes[l]
+      pool <- pool[!pool %in% l]
+      while (card != l || loopLength == 0) {
+        pool <- pool[!pool %in% card]
+        card <- boxes[card]
+        loopLength <- loopLength + 1
+      }
+      foundOnce[loopLength] <- 1
+    }
+    for (i in 1:N) {
+      if (foundOnce[i] == 1) {
+        n[i] <- n[i] + 1/nreps
+      }
+    }
+  }
+  print(n)
+  plot(1:100, n, ylim=c(0,0.1),type='s')
+}
+
+system.time(dloop(50))
