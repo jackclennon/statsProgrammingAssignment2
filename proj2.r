@@ -1,4 +1,7 @@
-start.time <- Sys.time()
+#Yeshwanth Zagabathuni s2319494,  ,
+#https://github.com/jackclennon/statsProgrammingAssignment2/ 
+#Contributions
+start.time <- Sys.time()      
 
 p <- function(n, k, strategy, shuffledboxes) {
   if (strategy < 3) {
