@@ -2,8 +2,8 @@
 #https://github.com/jackclennon/statsProgrammingAssignment2/ 
 #Contributions
 start.time <- Sys.time()      
-
-p <- function(n, k, strategy, shuffledboxes) {
+#The Prisioners problem is carried out as follows
+p <- function(n, k, strategy, shuffledboxes) {  
   if (strategy < 3) {
     if (strategy==1) {
       box_to_open <- shuffledboxes[k]
@@ -29,12 +29,21 @@ p <- function(n, k, strategy, shuffledboxes) {
   }
   0
 }
-pone <- function(n, k, strategy, nreps=10000) {
-  N <- 2*n
-  prisoners <- 1:N
-  nSuccesses <- 0
-  for (rep in 1:nreps) {
-    shuffledboxes <- sample(prisoners)
+pone <- function(n, k, strategy, nreps=10000) { 
+#The pone function estimates the probability of each prisioner finding his number.
+#The arguments are: 
+# 'n' - the maximum number of attempts a Prisoner gets to find his number                                                                   
+#  'k' - The Prisoner's Number                                                                
+#'strategy' - which is either 1 or 2 or 3                                                                 
+#'nreps' - The number of simulations to run o estimate probability (ideally 10000)
+#And also note that '2n' refers to the number of Prisons 
+  
+  N <- 2*n          #We assign the value 2*n to the variable 'N' to make it less confusing as we code further.
+  prisoners <- 1:N  #The 'prisioners' vector is assigned with the Prison numbers from 1 to 'N'
+  nSuccesses <- 0   #The 'nSuccesses' variable counts the number of successes in a simulation that is done 'nreps' number of times.
+                    #This variable is initialized to 0
+  for (rep in 1:nreps) { #Now we iterate for 'nreps' number of times
+    shuffledboxes <- sample(prisoners)       #The numbers 1 to N are 
     nSuccesses <- nSuccesses+p(n, k, strategy, shuffledboxes)
   }
   nSuccesses/nreps
@@ -61,7 +70,7 @@ rownames(PallExample)<-c("Strategy1","Strategy2","Strategy3")
 print(PoneExample)
 print(PallExample)
 
-dloops <- function(n, nreps=10000) {
+dloop <- function(n, nreps=10000) {
   N <- 2*n
   prisoners <- c(1:N)
   loops <- rep(0, N)
@@ -88,7 +97,7 @@ d <- function(n, k, shuffledboxes) {
   return(attempts)
 }
 
-dloops(50)
+dloop(50)
 
 end.time <- Sys.time()
 time.taken <- round(end.time - start.time,2)
