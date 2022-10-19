@@ -18,12 +18,12 @@ p <- function(n, k, strategy, shuffledboxes) {
     attempts <- 0             #attempts is initialized to 0 and will be incremented on each term
     
     #Now we simulate the Prisoner checking boxes for atmost 'n' attempts using the while() loop  
-    #The loop terminates if box_to_open= k or in simple terms when the the box contains the card with the Prioner's number(k) 
+    #The loop terminates if box_to_open= k or in simple terms when the the box contains the card with the Prisoner's number(k) 
     while (box_to_open != k) {
       if (attempts == n) {    #If attempts=n, the Prisoner ran out of attempts 
         return(0)             #Thus we return 0 
       }
-      box_to_open <- shuffledboxes[box_to_open] #
+      box_to_open <- shuffledboxes[box_to_open] #We store the next Card number to check
       attempts <- attempts + 1                  #'attempts' is incremented by 1 and is an indication of "1 turn completed"
     }
     return(1)
@@ -77,8 +77,8 @@ pall <- function(n, strategy, nreps=10000) {
                       #This variable is initialized to 0
   
   for (rep in 1:nreps) {
-    shuffle<-sample(1:N)  #The numbers in the 'prisoners' vector are re-arranged in random order and assigned to 'shuffled' 
-    tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))
+    shuffle<-sample(1:N)  #The Prison numbers from 1 to N are shuffled at random using sample() and assigned to 'shuffle'
+    tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))#
     if (sum(unlist(tally))==N){
       nSuccesses<-nSuccesses+1  #If all Prisoners suceed in finding their number, it is a success
                                 #Thus 'nSuccesses' is incremented by 1
@@ -106,44 +106,57 @@ rownames(PoneExample)<-c("Strategy1","Strategy2","Strategy3")
 #Once again, each row represents results of ith strategy 
 #The first column is the set of results for n=5 while the second is for n=50         
 PallExample<-matrix(c(pall(5, 1), pall(5, 2), pall(5, 3), pall(50, 1), pall(50, 2), pall(50, 3)), 3, 2)
-colnames(PallExample)<-c("n=5","n=50")
-rownames(PallExample)<-c("Strategy1","Strategy2","Strategy3")
+colnames(PallExample)<-c("n=5","n=50") #Each column carries results for n=5, n=50 respectively and thus are labelled 'n=5' and 'n=50'
+rownames(PallExample)<-c("Strategy1","Strategy2","Strategy3") #Each row corresponds to Strategy i (i=1,2,3)
 print(PoneExample)     #This line prints the PoneExample matrix
 print(PallExample)     #This line prints the PallExample matrix
 
+#What was surprising about the results?
+
+#Strategies 1 and 2 were very interesting comparisons! 
+#We were curious as to how Strategy 1 was the most efficient and had the highest success Probability in both cases.
+#We were especially amazed on how the success rate of Strategy 2 was lower compared to Strategy 1 considering that
+#the only difference was that we began with a Random box, compared to starting with a box with the Prisoner's number 
+#on it, as done in Strategy 1. The starting box made a difference! 
+#Strategy 3 for 1 Prisoner had really high Success rate and came close to matching Strategy 1. But as the
+#number of prisoners increased (n=5 and then n=50), it only got worse and was eventually rendered least efficient. 
+                  
+                  
+
+
 dloop <- function(n, nreps=10000) { #Now we write the dloop() function to estimate the probability of each loop from 1 to 2n
                                     #occuring atleast once in a random shuffling of cards to boxes
-  N <- 2*n               
-  prisoners <- c(1:N)
-  loops <- rep(0, N)
-  for (rep in 1:nreps) {
-    shuffle<-sample(1:N)
-    tally<-lapply(prisoners,function(x) d(n,x,shuffle))
-    tally <- unique(tally)
+  N <- 2*n               #We assign the value 2*n to the variable 'N' for easier understandability            
+  prisoners <- c(1:N)    #The 'prisioners' vector is assigned with the Prison numbers from 1 to 'N'
+  loops <- rep(0, N)     #We make a loops vector of length N and initialize it with 0s using rep() 
+  for (rep in 1:nreps) { #We perform the simulation 'nreps' number of times
+    shuffle<-sample(1:N) #The Prison numbers from 1 to N are shuffled at random using sample() and assigned to 'shuffle'
+    tally<-lapply(prisoners,function(x) d(n,x,shuffle)) #
+    tally <- unique(tally) #unique() helps to filter duplicates and thus update the count-storage vector, loops[]
     for (t in tally) {
-      loops[t] <- loops[t] + 1
+      loops[t] <- loops[t] + 1 #This step keeps updating the counter vector, loops[] on every simulation 
     }
   }
   loops <- loops/nreps  
   #Here we apply the law of probability p(c)=1-p(c')
-  #c = "probability of each loop from 1 to 2n occuring atleast once in a random shuffling of cards to boxes"
-  #c' = "probability of each loop from 1 to 2n not occuring in a random shuffling of cards to boxes"
+  #c = "probability of each loop from 1 to 2n occuring "atleast once" in a random shuffling of cards to boxes"
+  #c' = "probability of each loop from 1 to 2n "not occuring" in a random shuffling of cards to boxes"
   #Thus we print, '1-sum(loops[n:N])'
   print(1-sum(loops[n:N]))
-  plot(1:100, loops, ylim=c(0,0.1),type='s')
+  plot(1:100, loops, ylim=c(0,0.1),type='s') #Now let's visualize with a Staircase plot
 }
 
 d <- function(n, k, shuffledboxes) {
-  box_to_open <- shuffledboxes[k]
-  attempts <- 0
-  while (box_to_open != k) {
-    box_to_open <- shuffledboxes[box_to_open]
-    attempts <- attempts + 1
+  box_to_open <- shuffledboxes[k] #The first box we open as in Strategy 1
+  attempts <- 0              #'attempts' is initialized to 0 and will be incremented on each term
+  while (box_to_open != k) { #The loop terminates if box_to_open= k or in simple terms when the the box contains the card with the Prisoner's number(k) 
+    box_to_open <- shuffledboxes[box_to_open] #We store the next Card number to check
+    attempts <- attempts + 1   #'attempts' is incremented by 1 and is an indication of "1 turn completed"
   }
-  return(attempts)
+  return(attempts)             #Returns number of attempts or length of the loop.
 }
 
-dloop(50)
+dloop(50)  #Now we run dloop() function with n=50
 
 end.time <- Sys.time()
 time.taken <- round(end.time - start.time,2)
