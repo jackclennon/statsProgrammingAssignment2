@@ -72,6 +72,7 @@ dloops <- function(n, nreps=10000) {
   }
   loops <- loops/nreps
   print(1-sum(loops[n:N]))
+  plot(1:100, loops, ylim=c(0,0.1),type='s')
 }
 
 d <- function(n, k, shuffledboxes) {
