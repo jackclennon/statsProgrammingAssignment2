@@ -17,8 +17,9 @@ p <- function(n, k, strategy, shuffledboxes) {
     }
     attempts <- 0             #attempts is initialized to 0 and will be incremented on each term
     
-    #        
-    while (box_to_open != k) {#The loop terminates if box_to_open= k or in simple terms when the Prisoner found his card 'k' in the box 
+    #Now we simulate the Prisoner checking boxes for atmost 'n' attempts using the while() loop  
+    #The loop terminates if box_to_open= k or in simple terms when the the box contains the card with the Prioner's number(k) 
+    while (box_to_open != k) {
       if (attempts == n) {    #If attempts=n, the Prisoner ran out of attempts 
         return(0)             #Thus we return 0 
       }
