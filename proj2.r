@@ -1,6 +1,6 @@
 #,,Yeshwanth Zagabathuni s2319494
 #https://github.com/jackclennon/statsProgrammingAssignment2/ 
-#Contributions
+#Contributions:  
 start.time <- Sys.time()      
 #The Prisioners problem is carried out as follows
 p <- function(n, k, strategy, shuffledboxes) {  
@@ -30,15 +30,15 @@ p <- function(n, k, strategy, shuffledboxes) {
   0
 }
 pone <- function(n, k, strategy, nreps=10000) { 
-#The pone function estimates the probability of each prisioner finding his number.
-#The arguments are: 
+#The pone() function estimates the probability of each prisioner finding his number.
+#The parameters are: 
 # 'n' - the maximum number of attempts a Prisoner gets to find his number                                                                   
-#  'k' - The Prisoner's Number                                                                
+# 'k' - The Prisoner's Number                                                                
 #'strategy' - which is either 1 or 2 or 3                                                                 
-#'nreps' - The number of simulations to run o estimate probability (ideally 10000)
+#'nreps' - The number of simulations to run to estimate Probability (ideally 10000)
 #And also note that '2n' refers to the number of Prisons 
   
-  N <- 2*n          #We assign the value 2*n to the variable 'N' to make it less confusing as we code further.
+  N <- 2*n          #We assign the value 2*n to the variable 'N' for easier understandability as we code further
   prisoners <- 1:N  #The 'prisioners' vector is assigned with the Prison numbers from 1 to 'N'
   nSuccesses <- 0   #The 'nSuccesses' variable counts the number of successes in a simulation that is done 'nreps' number of times.
                     #This variable is initialized to 0
@@ -51,18 +51,32 @@ pone <- function(n, k, strategy, nreps=10000) {
     nSuccesses <- nSuccesses+p(n, k, strategy, shuffledboxes) #Now the p() function does the simulation and returns 0 or 1 as discussed above 
   }
   nSuccesses/nreps  #After 'nreps' number of simulations, we now know how many times the Prisoner 'k' suceeded 
-                    #Hence the Probability is computed as Number of Successes/ Total Number of Simulations 
+                    #Hence the Probability is computed as: Number of Successes/ Total Number of Simulations 
 }
+
+
 pall <- function(n, strategy, nreps=10000) {
-  N <- 2*n
-  prisoners <- c(1:N)
-  nSuccesses <- 0
+#The pall() function estimates the probability of all prisoners going free
+#It takes 3 parameters:
+# 'n' - the maximum number of attempts a Prisoner gets to find his number  
+#'strategy' - which is either 1 or 2 or 3
+#'nreps' - The number of simulations to run to estimate Probability (ideally 10000)
+
+  N <- 2*n            #We assign the value 2*n to the variable 'N' for easier understandability 
+  prisoners <- c(1:N) #The 'prisioners' vector is assigned with the Prison numbers from 1 to 'N'
+  nSuccesses <- 0     #The 'nSuccesses' variable counts the number of successes in a simulation that is done 'nreps' number of times.
+                      #This variable is initialized to 0
+  
   for (rep in 1:nreps) {
-    shuffle<-sample(1:N)
+    shuffle<-sample(1:N)  #The numbers in the 'prisoners' vector are re-arranged in random order and assigned to 'shuffled' 
     tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))
-    if (sum(unlist(tally))==N){nSuccesses<-nSuccesses+1}
+    if (sum(unlist(tally))==N){
+      nSuccesses<-nSuccesses+1  #If all Prisoners suceed in finding their number, it is a success
+                                #Thus 'nSuccesses' is incremented by 1
+    }
   }
-  nSuccesses/nreps
+  nSuccesses/nreps  #After 'nreps' number of simulations, we now know how many times all Prioners succeeded 
+                    #Hence the Probability is computed as: Number of Successes/ Total Number of Simulations 
 }
 
 PoneExample<-matrix(c(pone(5, 1, 1), pone(5, 1, 2), pone(5, 1, 3), pone(50, 1, 1), pone(50, 1, 2), pone(50, 1, 3)), 3, 2)
