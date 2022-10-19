@@ -1,4 +1,4 @@
-#Yeshwanth Zagabathuni s2319494,  ,
+#,,Yeshwanth Zagabathuni s2319494
 #https://github.com/jackclennon/statsProgrammingAssignment2/ 
 #Contributions
 start.time <- Sys.time()      
@@ -42,11 +42,16 @@ pone <- function(n, k, strategy, nreps=10000) {
   prisoners <- 1:N  #The 'prisioners' vector is assigned with the Prison numbers from 1 to 'N'
   nSuccesses <- 0   #The 'nSuccesses' variable counts the number of successes in a simulation that is done 'nreps' number of times.
                     #This variable is initialized to 0
-  for (rep in 1:nreps) { #Now we iterate for 'nreps' number of times
-    shuffledboxes <- sample(prisoners)       #The numbers 1 to N are 
-    nSuccesses <- nSuccesses+p(n, k, strategy, shuffledboxes)
+#Now we run our simulation 'nreps' number of times using the p() function
+#Based on the outcome of each simulation, either 1 or 0 will be added to nSuccesses
+#If 1 is returned by p(), that means the Prisoner found his number inside 'n' attempts
+#If 0 is returned by p(), that means the Prisoner did not find his number inside 'n' attempts
+  for (rep in 1:nreps) {  
+    shuffledboxes <- sample(prisoners)  #The numbers in the 'prisoners' vector are re-arranged in random order and assigned to 'shuffledboxes' 
+    nSuccesses <- nSuccesses+p(n, k, strategy, shuffledboxes) #Now the p() function does the simulation and returns 0 or 1 as discussed above 
   }
-  nSuccesses/nreps
+  nSuccesses/nreps  #After 'nreps' number of simulations, we now know how many times the Prisoner 'k' suceeded 
+                    #Hence the Probability is computed as Number of Successes/ Total Number of Simulations 
 }
 pall <- function(n, strategy, nreps=10000) {
   N <- 2*n
