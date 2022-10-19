@@ -1,0 +1,28 @@
+#try editting this to make it do dloops
+dloops <- function(n, nreps=10000) {
+  N <- 2*n
+  prisoners <- c(1:N)
+  loops <- rep(0, N)
+  for (rep in 1:nreps) {
+    shuffle<-sample(1:N)
+    tally<-lapply(prisoners,function(x) d(n,x,shuffle))
+    tally <- unique(tally)
+    for (t in tally) {
+      loops[t] <- loops[t] + 1
+    }
+  }
+  loops <- loops/nreps
+  print(1-sum(loops[n:N]))
+}
+
+d <- function(n, k, shuffledboxes) {
+  box_to_open <- shuffledboxes[k]
+  attempts <- 0
+  while (box_to_open != k) {
+    box_to_open <- shuffledboxes[box_to_open]
+    attempts <- attempts + 1
+  }
+  return(attempts)
+}
+
+system.time(dloops(50))
