@@ -251,7 +251,7 @@ loop_probs<-dloop(50)
 #or p(x>50 and x<=100) which is sum(loop_probs[n+1:N])
 #Thus p(c) = 1-sum(loops[n+1:N]) and we print the probability
 
-print(1-sum(loop_probs[(n+1):N]))
+print(1-sum(loop_probs[51:100]))
 
 #Next, we print loop probabilities
 
