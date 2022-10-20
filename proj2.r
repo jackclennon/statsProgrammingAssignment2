@@ -1,5 +1,5 @@
 #,,Yeshwanth Zagabathuni s2319494
-#https://github.com/jackclennon/statsProgrammingAssignment2/ 
+#https://github.com/jackclennon/statsProgrammingAssignment2/proj2.r 
 #Contributions:  
 start.time <- Sys.time()      
 #The Prisioners problem is carried out as follows:
@@ -78,9 +78,21 @@ pall <- function(n, strategy, nreps=10000) {
   
   for (rep in 1:nreps) {
     shuffle<-sample(1:N)  #The Prison numbers from 1 to N are shuffled at random using sample() and assigned to 'shuffle'
-    tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))#
-    if (sum(unlist(tally))==N){
-      nSuccesses<-nSuccesses+1  #If all Prisoners suceed in finding their number, it is a success
+    tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))#The lapply() runs the p() function for every Prisoner number (1 to N)
+                                                                #in 'prisoners' vector.
+                                                                #For each Prisoner 1 or 0 is returned, depending on Success or Failure
+                                                                #If the list is completely filled with ones, all Prisoners have thus
+                                                                #found their numbers and hence are set free.
+      #If all Prisoners suceed in finding their number, it is a success
+      #This is checked by the if "if(sum(unlist(tally))==N)" statement below
+      #The unlist() function converts 'tally' from list to a vector and thus facilitates for sum() to be applied on
+      #This condition can be visualised as an extension of pone() to 'N' prisoners
+      #Each success conributes '1' to 'tally' and each failure contributes '0'
+      #Thus if all Prisoners were successful, we get 1+1+1+.... 'N' times and thus the sum would simply be 'N' 
+      #If the sum is less than N, then atleast one Prisoner didn't succeed in finding his/her number and thus
+      #no one is set free.
+      if (sum(unlist(tally))==N){
+      nSuccesses<-nSuccesses+1  
                                 #Thus 'nSuccesses' is incremented by 1
     }
   }
@@ -117,27 +129,28 @@ print(PallExample)     #This line prints the PallExample matrix
 #We were curious as to how Strategy 1 was the most efficient and had the highest success Probability in both cases.
 #We were especially amazed on how the success rate of Strategy 2 was lower compared to Strategy 1 considering that
 #the only difference was that we began with a Random box, compared to starting with a box with the Prisoner's number 
-#on it, as done in Strategy 1. The starting box made a difference! 
+#on it, as done in Strategy 1. The box that the prisoner started with, made a difference! 
 #Strategy 3 for 1 Prisoner had really high Success rate and came close to matching Strategy 1. But as the
 #number of prisoners increased (n=5 and then n=50), it only got worse and was eventually rendered least efficient. 
                   
                   
-
-
-dloop <- function(n, nreps=10000) { #Now we write the dloop() function to estimate the probability of each loop from 1 to 2n
-                                    #occuring atleast once in a random shuffling of cards to boxes
+dloop <- function(n, nreps=10000) { 
+#Now we write the dloop() function to estimate the probability of each loop from 1 to 2n
+#occuring atleast once in a random shuffling of cards to boxes
   N <- 2*n               #We assign the value 2*n to the variable 'N' for easier understandability            
   prisoners <- c(1:N)    #The 'prisioners' vector is assigned with the Prison numbers from 1 to 'N'
   loops <- rep(0, N)     #We make a loops vector of length N and initialize it with 0s using rep() 
   for (rep in 1:nreps) { #We perform the simulation 'nreps' number of times
     shuffle<-sample(1:N) #The Prison numbers from 1 to N are shuffled at random using sample() and assigned to 'shuffle'
-    tally<-lapply(prisoners,function(x) d(n,x,shuffle)) #
+    tally<-lapply(prisoners,function(x) d(n,x,shuffle)) #The lapply() runs the d() function for every Prisoner number (1 to N)
+                                                        #in 'prisoners' vector.
     tally <- unique(tally) #unique() helps to filter duplicates and thus update the count-storage vector, loops[]
     for (t in tally) {
       loops[t] <- loops[t] + 1 #This step keeps updating the counter vector, loops[] on every simulation 
+                               #By the end of this loop, each loops[t] will have number of occurences of each loop of length 't'
     }
   }
-  loops <- loops/nreps  
+  loops <- loops/nreps  #The probability of each loops is computed and stored as loops[i]/nreps
   #Here we apply the law of probability p(c)=1-p(c')
   #c = "probability of each loop from 1 to 2n occuring "atleast once" in a random shuffling of cards to boxes"
   #c' = "probability of each loop from 1 to 2n "not occuring" in a random shuffling of cards to boxes"
@@ -147,13 +160,15 @@ dloop <- function(n, nreps=10000) { #Now we write the dloop() function to estima
 }
 
 d <- function(n, k, shuffledboxes) {
+  #The d() function is similar to p() and helps to run simulations
+  #Except, this time we're using it to count occurence of each loop of length from 1 to 'N'
   box_to_open <- shuffledboxes[k] #The first box we open as in Strategy 1
-  attempts <- 0              #'attempts' is initialized to 0 and will be incremented on each term
+  attempts <- 0                   #'attempts' is initialized to 0 and will be incremented on each term
   while (box_to_open != k) { #The loop terminates if box_to_open= k or in simple terms when the the box contains the card with the Prisoner's number(k) 
     box_to_open <- shuffledboxes[box_to_open] #We store the next Card number to check
-    attempts <- attempts + 1   #'attempts' is incremented by 1 and is an indication of "1 turn completed"
+    attempts <- attempts + 1      #'attempts' is incremented by 1 and is an indication of "1 turn completed"
   }
-  return(attempts)             #Returns number of attempts or length of the loop.
+  return(attempts)                #Returns number of attempts or length of the loop.
 }
 
 dloop(50)  #Now we run dloop() function with n=50
