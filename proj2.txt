@@ -1,5 +1,6 @@
 #Jack Lennon s2463109,Denis Zorba s2461643,Yeshwanth Zagabathuni s2319494
 #https://github.com/jackclennon/statsProgrammingAssignment2/proj2.r 
+
 #Contributions:  
 #Yeshwanth did the entire commenting of the code and tested it. He made the 
 #required modifications to the dloop() function and also answered what is 
@@ -9,8 +10,8 @@
 #He also wrote the code for dloops. 
 #~35%
 
-#Denis contributed to writing the pone and pall functions, as well as the 
-#data visualisation and comparison, and discussion for dloop, and p.
+#Denis contributed to optimising the pone and pall functions, as well as the 
+#data visualisation and comparison, and planning for dloop, and p.
 #~35%
 
 #The Prisoners problem is carried out as follows:
