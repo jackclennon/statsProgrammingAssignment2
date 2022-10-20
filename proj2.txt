@@ -196,11 +196,15 @@ dloop <- function(n, nreps=10000) {
   for (rep in 1:nreps) { #We perform the simulation 'nreps' number of times
     #The Prisoner numbers are shuffled using sample() and assigned to 'shuffle'
     shuffle<-sample(1:N) 
-    tally<-lapply(prisoners,function(x) d(n,x,shuffle)) #
+    #Now we initialise the 'tally' vector and we use lapply() function on d()
+    #The d() function works similar to the p() function but this time we are
+    #interested in finding probabilities of each loop
+    tally<-lapply(prisoners,function(x) d(n,x,shuffle)) 
     #unique() helps to filter duplicates and thus update count-vector, loops[]
     tally <- unique(tally) 
     for (t in tally) {
       #This step keeps updating the counter vector, loops[] on every simulation 
+      #For every occurence of loop of length 't' loops[t] is incremented by 1
       loops[t] <- loops[t] + 1 
     }
   }
