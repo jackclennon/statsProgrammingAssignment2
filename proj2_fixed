@@ -1,0 +1,242 @@
+
+
+#Jack Lennon s2463109,Denis Zorba s2461643, Yeshwanth Zagabathuni s2319494
+#https://github.com/jackclennon/statsProgrammingAssignment2/proj2.r 
+
+#Contributions:  
+
+#Yeshwanth did the entire commenting of the code and tested it. He contributed to the 
+#dloop() function, made a few other modifications to the code and also answered what  
+#is surprising about the results.
+#~30%
+
+#Jack contributed to writing the p function, as well as rough versions for pone and pall.
+#He also wrote the code for dloops. 
+#~35%
+
+#Denis contributed to writing the pone and pall functions, as well as the 
+#data visualisation and comparison, and discussion for dloop, and p.
+#~35%
+
+#The Prisoners problem involves 2n Prisoners trying their luck to be set free from prison.
+#There are a total of 2n boxes presented to each prisoner. These boxes contain cards numbered 
+#1 to 2n arranged at random. Each prisoner can open at most 'n' boxes to find his number. 
+#Each prisoner makes their choice on their own, and can't discuss what they do with the others.
+#After each prisoner makes their choices the cards are returned to the boxes they were in before
+#the prisoner did anything.
+#If all prisoners find their numbers then they all go free, if even one doesn't get their
+#number then they are all killed. 
+#This code analyses some strategies the prisoners can take to find the best way for them to
+#all escape.
+
+#The Prisoners problem is carried out as follows:
+
+#The p() function does the simulation of the events based on the strategy
+#We may loop over it 'nreps' number if times
+#The p() function does the simulation of the events based on the strategy
+#We may loop over it 'nreps' number if times
+p <- function(n, k, strategy, boxes) {  
+  #Strategies 1 and 2 are quite similar, so we deal them in this block
+  #Strategy 3 is dealt with at the else block
+  if (strategy < 3) {  
+    if (strategy==1) { 
+      #choose our box_to_open to be the box with our prisoner's number on it
+      box_to_open <- boxes[k] 
+    } else if (strategy==2) { 
+      #As Strategy 2 says, we need to start with a random numbered box 
+      #We use sample() to generate a random number
+      box_to_open <- boxes[sample(1:(2*n), 1)] 
+    }
+    #attempts is initialized to 0 and will be incremented on each term
+    attempts <- 0            
+    
+    #This simulates checking boxes for at most 'n' attempts using the while loop  
+    #The loop ends if the box contains the card with the Prisoner's number (k) 
+    while (box_to_open != k) {
+      if (attempts == n) {    #If attempts=n, the Prisoner ran out of attempts 
+        return(0)
+      }
+      #We store the next Card number to check
+      box_to_open <- boxes[box_to_open] 
+      #'attempts' is incremented by 1 and is an indication of "1 turn completed"
+      attempts <- attempts + 1                  
+    }
+    return(1)
+  } else {           
+    #Strategy 3 is to open 'n' random boxes and check them one by one
+    choices <- boxes[sample(1:(2*n))][1:n]  
+    #Every box is checked by the prisoner and this is simulated using for() loop
+    for (box_to_open in choices) {  
+      #If the Prisoner found his number in any of those boxes, it is a success
+      if (box_to_open == k) {                      
+        return(1)               
+      }
+    }
+  }
+  #Reaching this line means that the Prisoner couldn't find his number 
+  0      
+}
+
+Pone <- function(n, k, strategy, nreps=10000) { 
+  #Pone estimates the probability of each prisoner finding his number
+  #The parameters are: 
+  # 'n' - the maximum number of attempts a Prisoner gets to find his number                                                                   
+  # 'k' - The Prisoner's Number                                                                
+  #'strategy' - which is either 1 or 2 or 3                                                                 
+  #'nreps' - The number of simulations to run to estimate Probability
+  #And also note that '2n' refers to the number of Prisoners 
+  
+  N <- 2*n          #We assign the value 2*n to the variable 'N'
+  prisoners <- 1:N  #The 'prisoners' vector is assigned with the Prisoner numbers 
+  nSuccesses <- 0   #The 'nSuccesses' variable counts the number of successes
+  
+  #Now we run our simulation 'nreps' number of times using the p() function
+  #Either 1 or 0 will be added to nSuccesses for each simulation
+  #If 1 is returned by p(), that means the Prisoner was successful
+  #If 0 is returned by p(), that means the Prisoner was not successful
+  for (rep in 1:nreps) {  
+    #The numbers in the 'prisoners' vector are re-arranged in random order
+    # and assigned to 'boxes' 
+    boxes <- sample(prisoners) 
+    #Now the p() function does the simulation and returns 0 or 1 as discussed above 
+    nSuccesses <- nSuccesses+p(n, k, strategy, boxes) 
+  }
+  #After 'nreps' simulations, we know how many times the Prisoner 'k' succeeded 
+  #So we compute the probability of success
+  nSuccesses/nreps  
+}
+
+
+Pall <- function(n, strategy, nreps=10000) {
+  #The Pall() function estimates the probability of all prisoners going free
+  #It takes 3 parameters:
+  # 'n' - the maximum number of attempts a Prisoner gets to find his number  
+  #'strategy' - which is either 1 or 2 or 3
+  #'nreps' - The number of simulations to run to estimate Probability 
+  
+  N <- 2*n            #We assign the value 2*n to the variable 'N' 
+  prisoners <- c(1:N) #The 'prisoners' vector is assigned with numbers 1 to 'N'
+  nSuccesses <- 0     #The 'nSuccesses' variable counts the number of successes 
+  
+  for (rep in 1:nreps) {
+    #The Prisoner numbers from 1 to N are shuffled at random using sample() 
+    # and assigned to 'shuffle'
+    shuffle<-sample(1:N)  
+    
+    #The lapply() runs the p() function for every Prisoner number (1 to N)
+    #in 'prisoners' vector.
+    #For each Prisoner 1 or 0 is returned, depending on Success or Failure
+    #If the list is completely filled with ones, all Prisoners have thus
+    #found their numbers and hence are set free.
+    tally<-lapply(prisoners,function(x) p(n,x,strategy,shuffle))
+    #If all Prisoners succeed in finding their number, it is a success
+    #This is checked by the if "if(sum(unlist(tally))==N)" statement below
+    #The unlist() function converts 'tally' from list to a vector for sum()
+    #This condition can be visualised as an extension of Pone() to 'N' prisoners
+    #Each success contributes '1' to 'tally' and each failure contributes '0'
+    #If all Prisoners were successful, we get 1+1+1+.... = N  
+    #If the sum is less than N, then at least one Prisoner didn't succeed in 
+    #finding his/her number and thus no one is set free.
+    if (sum(unlist(tally))==N){
+      nSuccesses<-nSuccesses+1
+
+    }
+  }
+  nSuccesses/nreps
+  #The Probability is: Number of Successes/ Total Number of Simulations 
+}
+
+#Now we call Pone() function on all strategies, for given values of 'n'
+#n=5, k=1 and strategy = i (i=1,2,3)
+#Next we do the same with n=50
+#n=50, k=1 and strategy = i (i=1,2,3)
+#The 6 results obtained are better illustrated in a matrix 
+#where each row represents results of ith strategy 
+#The first column is the set of results for n=5 while the second is for n=50                 
+output <- rep(0, 6)
+for (i in 1:3) {
+  output[i] <- Pone(5, 1, i)
+}
+for (i in 1:3) {
+  output[i] <- Pone(50, 1, i)
+}
+PoneExample<-matrix(output, 3, 2)
+
+
+colnames(PoneExample)<-c("n=5","n=50")
+rownames(PoneExample)<-c("Strategy1","Strategy2","Strategy3")
+
+#Now we call Pall() function on all strategies, for given values of 'n'
+#n=5, k=1 and strategy = i (i=1,2,3)
+#Next we do the same with n=50
+#n=50, k=1 and strategy = i (i=1,2,3)
+#The 6 results obtained are illustrated in the matrix just like how we did for Pone() 
+#Once again, each row represents results of ith strategy 
+#The first column is the set of results for n=5 while the second is for n=50         
+output <- rep(0, 6)
+for (i in 1:3) {
+  output[i] <- Pall(5, 1, i)
+}
+for (i in 1:3) {
+  output[i] <- Pall(50, 1, i)
+}
+PallExample<-matrix(output, 3, 2)
+
+#Each column carries results for n=5, n=50 respectively 
+colnames(PallExample)<-c("n=5","n=50")
+#Each row corresponds to Strategy i (i=1,2,3)
+rownames(PallExample)<-c("Strategy1","Strategy2","Strategy3") 
+print(PoneExample)     #This line prints the PoneExample matrix
+print(PallExample)     #This line prints the PallExample matrix
+
+#What was surprising about the results?
+
+#Strategies 1 and 2 were very interesting comparisons! 
+#We were curious as to how Strategy 1 was the most efficient and had the highest success Probability in both cases.
+#We were especially amazed on how the success rate of Strategy 2 was lower compared to Strategy 1 considering that
+#the only difference was that we began with a Random box, compared to starting with a box with the Prisoner's number 
+#on it, as done in Strategy 1. The starting box made a difference! 
+#Strategy 3 for 1 Prisoner had really high Success rate and came close to matching Strategy 1. But as the
+#number of prisoners increased (n=5 and then n=50), it only got worse and was eventually rendered least efficient. 
+
+#Now we write the dloop() function to estimate the probability of each loop
+dloop <- function(n, nreps=10000) { 
+  #occurring at least once in a random shuffling of cards to boxes
+  N <- 2*n               #We assign the value 2*n to the variable 'N'    
+  prisoners <- c(1:N)    #The 'prisoners' vector is assigned with the Prison numbers from 1 to 'N'
+  loops <- rep(0, N)     #We make a loops vector of length N and initialize it with 0s using rep() 
+  for (rep in 1:nreps) { #We perform the simulation 'nreps' number of times
+    shuffle<-sample(1:N) #The Prison numbers from 1 to N are shuffled at random using sample() and assigned to 'shuffle'
+    tally<-lapply(prisoners,function(x) d(n,x,shuffle)) #
+    tally <- unique(tally) #unique() helps to filter duplicates and thus update the count-storage vector, loops[]
+    for (t in tally) {
+      loops[t] <- loops[t] + 1 #This step keeps updating the counter vector, loops[] on every simulation 
+    }
+  }
+  loops <- loops/nreps  
+  #Here we apply the law of probability p(c)=1-p(c')
+  #c = "probability of each loop from 1 to 2n occurring "at least once" in a random shuffling of cards to boxes"
+  #c' = "probability of each loop from 1 to 2n "not occurring" in a random shuffling of cards to boxes"
+  #Thus we print, '1-sum(loops[n:N])'
+  return(loops)
+}
+
+d <- function(n, k, boxes) {
+  #The d() function is similar to p() and helps to run simulations
+  #Except, this time we're using it to count occurrence of each loop of length from 1 to 'N'
+  box_to_open <- boxes[k] #The first box we open as in Strategy 1
+  attempts <- 0              #'attempts' is initialized to 0 and will be incremented on each term
+  while (box_to_open != k) { #The loop terminates if box_to_open= k or in simple terms when the the box contains the card with the Prisoner's number(k) 
+    box_to_open <- boxes[box_to_open] #We store the next Card number to check
+    attempts <- attempts + 1   #'attempts' is incremented by 1 and is an indication of "1 turn completed"
+  }
+  return(attempts)             #Returns number of attempts or length of the loop.
+}
+
+
+
+loops<-dloop(50)  #Now we run dloop() function with n=50
+print(1-sum(loops[51:100]))
+plot(1:100, loops, ylim=c(0,0.1),type='s') #Now let's visualize with a Staircase plot
+
+
