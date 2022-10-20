@@ -5,7 +5,7 @@ start.time <- Sys.time()
 #The Prisioners problem is carried out as follows:
 
 #The p() function does the simulation of the events based on the strategy of choosing
-#We may loop over it 'nreps' number if times
+#We may loop over it 'nreps' number of times or in simple terms, 'nreps' simulations 
 p <- function(n, k, strategy, shuffledboxes) {  
 #Strategies 1 and 2 are quite similar compared to Strategy 3 and hence, we deal them in this block
 #Strategy 3 is dealt at the else block
