@@ -3,7 +3,7 @@
 #Contributions:  
 #Yeshwanth did the entire commenting of the code and tested it. He made the 
 #required modifications to the dloop() function and also answered what is 
-#surprising about the results.(Questions 4 and 5)
+#surprising about the results.(Questions 4 and 5): Estimated Contribution: 30% 
 
 #The Prisoners problem is carried out as follows:
 
