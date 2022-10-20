@@ -1,9 +1,29 @@
 #Jack Lennon s2463109,Denis Zorba s2461643,Yeshwanth Zagabathuni s2319494
-#https://github.com/jackclennon/statsProgrammingAssignment2/proj2.r 
+#https://github.com/jackclennon/statsProgrammingAssignment2/proj2.r  
 #Contributions:  
-#Yeshwanth did the entire commenting of the code and tested it. He made the 
-#required modifications to the dloop() function and also answered what is 
-#surprising about the results.(Questions 4 and 5): Estimated Contribution: 30% 
+#Yeshwanth did the entire commenting of the code and tested it. He conributed to the 
+#dloop() function, made a few other modifications to the code and also answered what  
+#is surprising about the results.
+#~30%
+
+#Jack contributed to writing the p function, as well as rough versions for pone and pall.
+#He also wrote the code for dloops. 
+#~35%
+
+#Denis contributed to writing the pone and pall functions, as well as the 
+#data visualisation and comparison, and discussion for dloop, and p.
+#~35%
+
+#The Prisoners problem involves 2n Prisoners trying their luck to be set free from prison.
+#There are a total of 2n boxes presented to each prisoner. These boxes contain cards numbered 
+#1 to 2n arranged at random. Each prisoner can open at most 'n' boxes to find his number. 
+#Each prisoner makes their choice on their own, and can't discuss what they do with the others.
+#After each prisoner makes their choices the cards are returned to the boxes they were in before
+#the prisoner did anything.
+#If all prisoners find their numbers then they all go free, if even one doesn't get their
+#number then they are all killed. 
+#This code analyses some strategies the prisoners can take to find the best way for them to
+#all escape. 
 
 #The Prisoners problem is carried out as follows:
 
