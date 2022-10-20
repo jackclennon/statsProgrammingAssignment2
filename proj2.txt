@@ -3,7 +3,15 @@
 #Contributions:  
 #Yeshwanth did the entire commenting of the code and tested it. He made the 
 #required modifications to the dloop() function and also answered what is 
-#surprising about the results.(Questions 4 and 5): Estimated Contribution: 30% 
+#surprising about the results.(Questions 4 and 5)
+
+#Jack contributed to writing the p function, as well as rough versions for pone and pall.
+#He also wrote the code for dloops. 
+#~35%
+
+#Denis contributed to writing the pone and pall functions, as well as the 
+#data visualisation and comparison, and discussion for dloop, and p.
+#~35%
 
 #The Prisoners problem is carried out as follows:
 
@@ -212,7 +220,9 @@ d <- function(n, k, boxes) {
 
 #Now we run dloop() function with n=50
 #It returns a vector that is assigned to 'loop_probs'
+
 loop_probs<-dloop(50) 
+
 #The probability that there is no loop longer than 50 in a random reshuffling
 #of cards to boxes is to be computed next
 #Here we apply the Complement law, p(c)=1-p(c')
@@ -223,8 +233,13 @@ loop_probs<-dloop(50)
 #p(c') is simply sum of probabilities of loops greater than 50 
 #or p(x>50 and x<=100) which is sum(loop_probs[n+1:N])
 #Thus p(c) = 1-sum(loops[n+1:N]) and we print the probability
+
 print(1-sum(loop_probs[(n+1):N]))
+
 #Next, we print loop probabilities
+
 print(loop_probs)
+
 #Finally, let's visualize loop probabilities with a Staircase plot
+
 plot(1:100, loop_probs, ylim=c(0,0.1),type='s') 
